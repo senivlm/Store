@@ -25,7 +25,7 @@ namespace Store
                 new Product("Soda", 1, .5)
             );
 
-            st.GetProductsFromConsole();
+            st.GetProductFromConsole();
 
             Console.WriteLine(st);
 
