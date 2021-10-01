@@ -57,7 +57,7 @@ namespace Store
 
         public static bool operator !=(Product pr1, Product pr2) => !pr1.Equals(pr2);
 
-        public override string ToString() => $"Name: {Name}, Price: {_price}, Weight: {_weight}";
+        public override string ToString() => $"Name: {Name}, Price: {_price:c}, Weight: {_weight}";
 
         double _price;
         double _weight;

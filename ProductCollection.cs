@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Store
 {
@@ -38,12 +39,12 @@ namespace Store
 
         public override string ToString()
         {
-            string res = "";
+            var res = new StringBuilder();
             foreach (var item in _data)
             {
-                res += $"[{item.Value}] {item.Key}\n";
+                res.AppendLine($"[{item.Value}] {item.Key}");
             }
-            return res;
+            return res.ToString();
         }
 
         public IEnumerator<KeyValuePair<Product, uint>> GetEnumerator() =>

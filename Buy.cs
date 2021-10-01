@@ -32,5 +32,8 @@
             : base(products)
         {
         }
+
+        public override string ToString() =>
+            $"{base.ToString()}\nTotal Weight: {Weight}\nTotal Price: {Price}";
     }
 }
