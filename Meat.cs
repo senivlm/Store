@@ -12,19 +12,19 @@ namespace Store
 
         public MeatType Type { get; set; }
 
-        public Meat(string name, double price, double weight, QualityGrade quality, MeatType type)
-            : base(name, price, weight)
+        public Meat(string name, double price, double weight, int consumeIn, QualityGrade quality, MeatType type)
+            : base(name, price, weight, consumeIn)
         {
             Quality = quality;
             Type = type;
         }
 
-        public Meat() : this("ProductName", 0, 0, 0, 0)
+        public Meat() : this("ProductName", 0, 0, 0, 0, 0)
         {
         }
 
         public override void MultPrice(double multiplier) =>
-            Price *= (0.95 * multiplier - 0.05 * (int)Quality);
+            base.MultPrice(0.95 * multiplier - 0.05 * (int)Quality);
 
         public bool Equals(Meat pr) =>
             base.Equals(pr as Product) && Quality == pr.Quality && Type == pr.Type;

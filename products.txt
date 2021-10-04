@@ -1,0 +1,7 @@
+﻿Name: Milk, Price: $3.50, Weight: 1, Consume in 10 days
+Name: Milk, Price: $3.50, Weight: 1, Consume in 10 days
+Name: Milk, Price: $3.50, Weight: 1, Consume in 10 days
+Name: Sausage, Price: $2.00, Weight: 0.12, Consume in 2 days, Quality: Highest, Type: Pork
+Name: Bread, Price: $1.50, Weight: 0.3, Consume in 3 days
+Name: Soda, Price: $1.00, Weight: 0.5, Consume in 1 days
+Name: Bread, Price: $1.50, Weight: 0.3, Consume in 3 days

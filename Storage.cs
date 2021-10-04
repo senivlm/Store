@@ -15,7 +15,7 @@ namespace Store
             {
                 QualityGrade quality = QualityGrade.Highest;
                 MeatType meatType = MeatType.Beef;
-                uint consumeIn = 0;
+                int consumeIn = 0;
                 bool isMeat = false, isDairy = false;
 
                 Console.WriteLine("Type the product name and press Enter:");
@@ -26,6 +26,9 @@ namespace Store
 
                 Console.WriteLine("Type the product weight as floating point value:");
                 double weight = double.Parse(Console.ReadLine());
+
+                Console.WriteLine("Type the consume time in days(integer):");
+                consumeIn = int.Parse(Console.ReadLine());
 
                 Console.WriteLine("Is the product supposed to be Meat or Dairy (Meat/Dairy/blank + Enter):");
                 switch (Console.ReadLine())
@@ -41,16 +44,13 @@ namespace Store
                         break;
 
                     case "Dairy":
-                        Console.WriteLine("Type the dairy consume time in days(integer):");
-                        consumeIn = uint.Parse(Console.ReadLine());
-
                         isDairy = true;
                         break;
                 }
 
-                if (isMeat) Add(new Meat(name, price, weight, quality, meatType));
+                if (isMeat) Add(new Meat(name, price, weight, consumeIn, quality, meatType));
                 else if (isDairy) Add(new Dairy(name, price, weight, consumeIn));
-                else Add(new Product(name, price, weight));
+                else Add(new Product(name, price, weight, consumeIn));
             }
             catch (FormatException)
             {
@@ -63,6 +63,38 @@ namespace Store
             GetProductFromConsole();
             Console.WriteLine("Would you like to add another product (yes/blank + enter):");
             if (Console.ReadLine() == "yes") GetProductFromConsole();
+        }
+
+        public void GetProductsFromFile(string filePath)
+        {
+            try
+            {
+                foreach (string spr in System.IO.File.ReadAllLines(filePath))
+                {
+                    if (Product.TryParse(spr, out Product pr)) Add(pr);
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (System.IO.IOException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public void RemoveSpoiledAndRecordToFile(string filePath)
+        {
+            var spoiled = new ProductCollection();
+            foreach (var item in this)
+                if (!item.Key.IsFresh)
+                {
+                    spoiled.Add(item.Key, item.Value);
+                    RemoveAll(item.Key);
+                }
+
+            System.IO.File.WriteAllText(filePath, spoiled.ToString());
         }
 
         public List<Meat> GetMeatList()
