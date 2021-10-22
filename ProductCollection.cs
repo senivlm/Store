@@ -6,11 +6,15 @@ namespace Store
 {
     class ProductCollection : IEnumerable<KeyValuePair<Product, uint>>
     {
-        public ProductCollection(params Product[] products)
+        public ProductCollection(IEnumerable<Product> products)
         {
             _data = new Dictionary<Product, uint>();
             Add(products);
         }
+
+        public ProductCollection(params Product[] products)
+            : this(products as IEnumerable<Product>)
+        { }
 
         public ICollection<Product> Products => _data.Keys;
 

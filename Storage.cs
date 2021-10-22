@@ -6,8 +6,13 @@ namespace Store
 {
     class Storage : ProductCollection
     {
-        public Storage(params Product[] products) =>
-            Add(products);
+        public Storage(params Product[] products)
+            : base(products)
+        { }
+
+        public Storage(IEnumerable<Product> products)
+            : base(products)
+        { }
 
         public void GetProductFromConsole()
         {
