@@ -7,6 +7,7 @@ namespace Store
         static void Main()
         {
             var storage = new Storage();
+            // Чому одразу не записуєтесь на прослуховування події.
             storage.GetProductsFromFile(@"C:\Users\ihorm\source\repos\Store\products.txt");
 
             //try again version
