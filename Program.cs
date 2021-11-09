@@ -36,7 +36,7 @@ namespace Store
             };
 
             storage.OnDisplay += (obj, args) =>
-            {
+            {// Ця функція не порушує принцип Solid?Обробник події в самому класі?
                 (obj as Storage).RemoveSpoiledAndRecordToFile(@"C:\Users\ihorm\source\repos\Store\log.txt");
             };
 
