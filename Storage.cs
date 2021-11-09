@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Store
 {
-    class Storage : ProductCollection
+    public class Storage : Products
     {
         public Storage(params Product[] products)
             : base(products)
@@ -14,52 +14,72 @@ namespace Store
             : base(products)
         { }
 
+        public event EventHandler<GetProductFromConsoleEventArgs> OnGetFromConsoleFail;
+
+        public event EventHandler OnDisplay;
+
         public void GetProductFromConsole()
         {
+            GetProductFromConsoleEventArgs args = new();
+
+            Console.WriteLine("Type the product name and press Enter:");
+            args.Name = Console.ReadLine();
+
+            Console.WriteLine("Type the product price as floating point value:");
+            args.Price = Console.ReadLine();
+
+            Console.WriteLine("Type the product weight as floating point value:");
+            args.Weight = Console.ReadLine();
+
+            Console.WriteLine("Type the consume time in days(integer):");
+            args.ConsumeIn = Console.ReadLine();
+
+            Console.WriteLine("Is the product supposed to be Meat or Dairy (Meat/Dairy/blank + Enter):");
+
             try
             {
-                QualityGrade quality = QualityGrade.Highest;
-                MeatType meatType = MeatType.Beef;
-                int consumeIn = 0;
-                bool isMeat = false, isDairy = false;
-
-                Console.WriteLine("Type the product name and press Enter:");
-                string name = Console.ReadLine();
-
-                Console.WriteLine("Type the product price as floating point value:");
-                double price = double.Parse(Console.ReadLine());
-
-                Console.WriteLine("Type the product weight as floating point value:");
-                double weight = double.Parse(Console.ReadLine());
-
-                Console.WriteLine("Type the consume time in days(integer):");
-                consumeIn = int.Parse(Console.ReadLine());
-
-                Console.WriteLine("Is the product supposed to be Meat or Dairy (Meat/Dairy/blank + Enter):");
                 switch (Console.ReadLine())
                 {
                     case "Meat":
                         Console.WriteLine("Type the meat quality (Highest/First/Second):");
-                        quality = Enum.Parse<QualityGrade>(Console.ReadLine());
+                        args.Quality = Console.ReadLine();
 
                         Console.WriteLine("Type the meat type (Mutton/Beef/Pork/Chicken):");
-                        meatType = Enum.Parse<MeatType>(Console.ReadLine());
+                        args.MeatType = Console.ReadLine();
 
-                        isMeat = true;
+                        Add(new Meat(
+                            args.Name,
+                            double.Parse(args.Price),
+                            double.Parse(args.Weight),
+                            int.Parse(args.ConsumeIn),
+                            Enum.Parse<QualityGrade>(args.Quality),
+                            Enum.Parse<MeatType>(args.MeatType)
+                            ));
                         break;
 
                     case "Dairy":
-                        isDairy = true;
+                        Add(new Dairy(
+                            args.Name,
+                            double.Parse(args.Price),
+                            double.Parse(args.Weight),
+                            int.Parse(args.ConsumeIn)
+                            ));
+                        break;
+
+                    default:
+                        Add(new Product(
+                            args.Name,
+                            double.Parse(args.Price),
+                            double.Parse(args.Weight),
+                            int.Parse(args.ConsumeIn)
+                            ));
                         break;
                 }
-
-                if (isMeat) Add(new Meat(name, price, weight, consumeIn, quality, meatType));
-                else if (isDairy) Add(new Dairy(name, price, weight, consumeIn));
-                else Add(new Product(name, price, weight, consumeIn));
             }
             catch (FormatException)
             {
-                Console.WriteLine("Format seems to be wrong, product was not added");
+                //Console.WriteLine("Format seems to be wrong, product was not added");
+                OnGetFromConsoleFail?.Invoke(this, args);
             }
         }
 
@@ -76,7 +96,8 @@ namespace Store
             {
                 foreach (string spr in System.IO.File.ReadAllLines(filePath))
                 {
-                    if (Product.TryParse(spr, out Product pr)) Add(pr);
+                    if (Meat.TryParse(spr, out Meat mt)) Add(mt);
+                    else if (Product.TryParse(spr, out Product pr)) Add(pr);
                 }
             }
             catch (ArgumentException ex)
@@ -91,7 +112,7 @@ namespace Store
 
         public void RemoveSpoiledAndRecordToFile(string filePath)
         {
-            var spoiled = new ProductCollection();
+            var spoiled = new Products();
             foreach (var item in this)
                 if (!item.Key.IsFresh)
                 {
@@ -105,7 +126,7 @@ namespace Store
         public List<Meat> GetMeatList()
         {
             var res = new List<Meat>();
-            foreach (Product item in Products)
+            foreach (Product item in UniqueProducts)
             {
                 if (item is Meat) res.Add(item as Meat);
             }
@@ -114,12 +135,47 @@ namespace Store
 
         public void MultPrice(double m)
         {
-            foreach (Product item in Products)
+            foreach (Product item in UniqueProducts)
             {
                 item.MultPrice(m);
             }
         }
 
-        public Product this[int i] => Products.ElementAt(i);
+        public Product this[int i] => UniqueProducts.ElementAt(i);
+
+        public void Remove(string name)
+        {
+            foreach (Product p in UniqueProducts)
+            {
+                if (p.Name == name)
+                {
+                    Remove(p);
+                    break;
+                }
+            }
+        }
+
+        public Product Find(Func<Product, bool> predicate)
+            => UniqueProducts.First<Product>(predicate);
+
+        public IEnumerable<Product> FindAll(Func<Product, bool> predicate)
+            => UniqueProducts.Where(predicate);
+
+        public IEnumerable<Product> FindSpoiled()
+        {
+            IEnumerable<Product> result = FindAll(product => !product.IsFresh);
+            return result;
+        }
+
+        public struct GetProductFromConsoleEventArgs
+        {
+            public string Name, TypeOfProduct, Price, Weight, ConsumeIn, Quality, MeatType;
+        }
+
+        public override string ToString()
+        {
+            OnDisplay?.Invoke(this, new());
+            return base.ToString();
+        }
     }
 }
