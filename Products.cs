@@ -4,25 +4,26 @@ using System.Text;
 
 namespace Store
 {
-    class ProductCollection : IEnumerable<KeyValuePair<Product, uint>>
+    public class Products : IEnumerable<KeyValuePair<Product, uint>>
     {
-        public ProductCollection(IEnumerable<Product> products)
+        Dictionary<Product, uint> _data;
+
+        public Products(IEnumerable<Product> products)
         {
-            _data = new Dictionary<Product, uint>();
+            _data = new();
             Add(products);
         }
 
-        public ProductCollection(params Product[] products)
+        public Products(params Product[] products)
             : this(products as IEnumerable<Product>)
         { }
 
-        public ICollection<Product> Products => _data.Keys;
+        public ICollection<Product> UniqueProducts => _data.Keys;
 
-        public static ProductCollection Parse(string s)
+        public static Products Parse(string[] entries)
         {
-            string[] prs = s.Split('\n');
-            var result = new ProductCollection();
-            foreach (string pr in prs)
+            Products result = new();
+            foreach (string pr in entries)
                 result.Add(Product.Parse(pr));
             return result;
         }
@@ -63,9 +64,6 @@ namespace Store
         public IEnumerator<KeyValuePair<Product, uint>> GetEnumerator() =>
             _data.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() =>
-            throw new System.NotImplementedException();
-
-        Dictionary<Product, uint> _data;
+        IEnumerator IEnumerable.GetEnumerator() => _data.GetEnumerator();
     }
 }

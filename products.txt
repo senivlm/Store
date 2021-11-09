@@ -1,7 +1,7 @@
-﻿Name: Milk, Price: $3.50, Weight: 1, Consume in 10 days
-Name: Milk, Price: $3.50, Weight: 1, Consume in 10 days
-Name: Milk, Price: $3.50, Weight: 1, Consume in 10 days
-Name: Sausage, Price: $2.00, Weight: 0.12, Consume in 2 days, Quality: Highest, Type: Pork
-Name: Bread, Price: $1.50, Weight: 0.3, Consume in 3 days
-Name: Soda, Price: $1.00, Weight: 0.5, Consume in 1 days
-Name: Bread, Price: $1.50, Weight: 0.3, Consume in 3 days
+﻿Milk, $3.50, 1kg, consume in 10 days, produced on 10/26/2021
+Milk, $3.50, 1kg, consume in 10 days, produced on 10/26/2021
+Milk, $3.50, 1kg, consume in 10 days, produced on 10/26/2021
+Sausage, $2.00, 0.12kg, consume in 2 days, produced on 10/26/2021, quality: Highest, type: Pork
+Bread, $1.50, 0.3kg, consume in 3 days, produced on 10/26/2021
+Soda, $1.00, 0.5kg, consume in 1 days, produced on 10/26/2021
+Bread, $1.50, 0.3kg, consume in 3 days, produced on 10/26/2021

@@ -1,6 +1,6 @@
 ﻿namespace Store
 {
-    class Buy : ProductCollection
+    public class Buy : Products
     {
         public double Price
         {

@@ -2,7 +2,7 @@
 
 namespace Store
 {
-    static class Check
+    public static class Check
     {
         static public void PrintProductIntoConsole(Product pr) =>
             Console.WriteLine(pr);
